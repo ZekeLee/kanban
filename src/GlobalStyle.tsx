@@ -33,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
 
   a{color:inherit;text-decoration:none;}
 
-  button, input, select{all:unset;appearance:none;box-sizing:border-box;}
+  button, input, select{all:unset;appearance:none;line-height:1.3;box-sizing:border-box;}
   
   button{cursor:pointer;}
 
