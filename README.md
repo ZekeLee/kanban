@@ -2,11 +2,19 @@
 
 ## 📌 Skills
 
-- React(CRA with TypeScript), Recoil, styled-components
+- React(CRA with TypeScript), Recoil, styled-components, react-beautiful-dnd
 
 ## 📌 Deploy URL
 
 - [https://dingunote.github.io/kanban/](https://dingunote.github.io/kanban/)
+
+## 📌 Issue
+
+- ~~D&D할 때 연관이 없는 다른 요소들까지 모두 리렌더링 되기 때문에 지나치게 많은 리렌더링이 일어나는 문제가 있다.~~
+
+## 📌 Refactoring
+
+- D&D할 때 DraggableCard 컴포넌트의 연관이 없는 다른 요소들까지 모두 리렌더링 되기 때문에 지나치게 많은 리렌더링이 일어나는 문제가 있다. => React.memo()를 사용해서 prop이 변하지 않는 요소들은 리렌더링 되지 않게 수정
 
 <!-- ## 📌 File Path
 
