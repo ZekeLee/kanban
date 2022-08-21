@@ -7,5 +7,9 @@ declare module 'styled-components' {
     bgColor: string;
     boardColor: string;
     cardColor: string;
+    textColor: string;
+    boxShadow: string;
+    overlay: string;
+    dragOver: string;
   }
 }

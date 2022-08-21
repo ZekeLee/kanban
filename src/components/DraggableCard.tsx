@@ -1,11 +1,14 @@
+import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 
 import styled from 'styled-components';
 
-const Card = styled.li`
+const Card = styled.li<{ isDragging: boolean }>`
   padding: 1rem;
-  background-color: ${(props) => props.theme.cardColor};
+  background-color: ${(props) =>
+    props.isDragging ? props.theme.dragOver : props.theme.cardColor};
   border-radius: 5px;
+  box-shadow: ${(props) => (props.isDragging ? props.theme.boxShadow : 'none')};
 `;
 
 interface IDraggableProps {
@@ -14,13 +17,12 @@ interface IDraggableProps {
 }
 
 const DraggableCard = ({ toDo, index }: IDraggableProps) => {
-  console.log(toDo, 'has been rendered');
-
   return (
     <Draggable draggableId={toDo} index={index} key={toDo}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Card
           ref={provided.innerRef}
+          isDragging={snapshot.isDragging}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
@@ -31,4 +33,4 @@ const DraggableCard = ({ toDo, index }: IDraggableProps) => {
   );
 };
 
-export default DraggableCard;
+export default React.memo(DraggableCard);
