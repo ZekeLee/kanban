@@ -1,45 +1,64 @@
-import React from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { hoursSelector, minuteState } from './atoms';
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { useRecoilState } from 'recoil';
 
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import { toDoState } from './atoms';
+import DraggableCard from './components/DraggableCard';
 import GlobalStyle from './GlobalStyle';
 import { lightTheme } from './theme';
 
+const Container = styled.main`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+`;
+
+const Boards = styled.section`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  width: 100%;
+`;
+
+const Board = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem;
+  background-color: ${(props) => props.theme.boardColor};
+  border-radius: 5px;
+`;
+
 const App = () => {
-  const [minutes, setMinutes] = useRecoilState(minuteState);
-  const [hours, setHours] = useRecoilState(hoursSelector);
-
-  const onMinutesChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = e;
-
-    setMinutes(+value);
+  const [toDos, setToDos] = useRecoilState(toDoState);
+  const onDragEnd = ({ draggableId, source, destination }: DropResult) => {
+    if (destination?.index === undefined) return;
+    setToDos((oldToDos) => {
+      const copyToDos = [...oldToDos];
+      copyToDos.splice(source.index, 1); // Delete Item copyToDos[sourceIndex]
+      copyToDos.splice(destination.index, 0, draggableId); // Put back the item on the destination.index
+      return copyToDos;
+    });
   };
-  const onHoursChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = e;
-
-    setHours(+value);
-  };
-
   return (
     <ThemeProvider theme={lightTheme}>
       <GlobalStyle />
-      <input
-        type="number"
-        onChange={onMinutesChange}
-        value={minutes}
-        placeholder="Minutes"
-      />
-      <input
-        type="number"
-        onChange={onHoursChange}
-        value={hours}
-        placeholder="Hours"
-      />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Container>
+          <Boards>
+            <Droppable droppableId="droppable-1">
+              {(provided) => (
+                <Board ref={provided.innerRef} {...provided.droppableProps}>
+                  {toDos.map((toDo, index) => (
+                    <DraggableCard key={toDo} toDo={toDo} index={index} />
+                  ))}
+                  {provided.placeholder}
+                </Board>
+              )}
+            </Droppable>
+          </Boards>
+        </Container>
+      </DragDropContext>
     </ThemeProvider>
   );
 };
