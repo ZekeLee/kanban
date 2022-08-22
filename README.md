@@ -2,7 +2,7 @@
 
 ## 📌 Skills
 
-- React(CRA with TypeScript), Recoil, styled-components, react-beautiful-dnd
+- React(CRA with TypeScript), Recoil, recoil-persist, styled-components, react-beautiful-dnd, react-hook-form
 
 ## 📌 Deploy URL
 
