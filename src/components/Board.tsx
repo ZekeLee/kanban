@@ -1,7 +1,10 @@
+import { useForm } from 'react-hook-form';
 import { Droppable } from 'react-beautiful-dnd';
 import DraggableCard from './DraggableCard';
 
 import styled from 'styled-components';
+import { IToDo, toDoState } from '../atoms';
+import { useSetRecoilState } from 'recoil';
 
 const Container = styled.section`
   display: flex;
@@ -34,8 +37,19 @@ const Title = styled.h2`
   font-weight: 700;
 `;
 
+const Form = styled.form`
+  padding: 0 1rem;
+  width: 100%;
+  input {
+    padding: 0.5rem;
+    width: 100%;
+    background-color: ${(props) => props.theme.cardColor};
+    border-radius: 5px;
+  }
+`;
+
 interface IBoardProps {
-  toDos: string[];
+  toDos: IToDo[];
   boardId: string;
 }
 
@@ -44,10 +58,36 @@ interface IItemProps {
   draggingFromThisWith: string | undefined;
 }
 
+interface IForm {
+  toDo: string;
+}
+
 const Board = ({ boardId, toDos }: IBoardProps) => {
+  const setToDos = useSetRecoilState(toDoState);
+  const { register, setValue, handleSubmit } = useForm<IForm>();
+  const onValid = ({ toDo }: IForm) => {
+    const newToDo = {
+      id: Date.now(),
+      text: toDo,
+    };
+    setToDos((allBoards) => {
+      return {
+        ...allBoards,
+        [boardId]: [...allBoards[boardId], newToDo],
+      };
+    });
+    setValue('toDo', '');
+  };
   return (
     <Container>
       <Title>{boardId}</Title>
+      <Form onSubmit={handleSubmit(onValid)}>
+        <input
+          type="text"
+          {...register('toDo', { required: true })}
+          placeholder={`Add task on ${boardId}`}
+        />
+      </Form>
       <Droppable droppableId={boardId}>
         {(provided, snapshot) => (
           <BoardEl
@@ -57,7 +97,12 @@ const Board = ({ boardId, toDos }: IBoardProps) => {
             {...provided.droppableProps}
           >
             {toDos.map((toDo, index) => (
-              <DraggableCard key={toDo} toDo={toDo} index={index} />
+              <DraggableCard
+                key={toDo.id}
+                toDoId={toDo.id}
+                toDoText={toDo.text}
+                index={index}
+              />
             ))}
             {provided.placeholder}
           </BoardEl>
