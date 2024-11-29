@@ -6,7 +6,7 @@
 
 ## 📌 Deploy URL
 
-- [https://dingunote.github.io/kanban/](https://dingunote.github.io/kanban/)
+- [https://zekelee.github.io/kanban/](https://zekelee.github.io/kanban/)
 
 ## 📌 Issue
 
